@@ -1,5 +1,5 @@
 
-Aim of this project is to find out which chemical properties influence the quality of red wines using the given 
+__Aim of this project__ is to find out which chemical properties influence the quality of red wines using the given 
 dataset __wineQualityReds.csv__.
 
 __Overview of the given dataset__: The given dataset contains 1,599 red wines with 11 variables on the chemical 
