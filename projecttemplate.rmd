@@ -1,15 +1,9 @@
-TITLE by YOUR_NAME_HERE
+Red Wine Quality by Jeswin George
 ========================================================
 
-> **Tip**: You will see quoted sections like this throughout the template to
-help you construct your report. Make sure that you remove these notes before
-you finish and submit your project!
-
-> **Tip**: One of the requirements of this project is that your code follows
-good formatting techniques, including limiting your lines to 80 characters or
-less. If you're using RStudio, go into Preferences \> Code \> Display to set up
-a margin line to help you keep track of this guideline!
-
+__Aim of this project__ is to find out which chemical property influence the 
+quality of red wines.
+                                                                                                                            
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using in your analysis in this code
 # chunk.
@@ -24,16 +18,16 @@ a margin line to help you keep track of this guideline!
 # want it to. This will clean up the flow of your report.
 
 library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(GGally)
+library(gridExtra)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-
+wine_df <- read.csv('wineQualityReds.csv', header = TRUE, sep = ',')
 ```
-
-> **Tip**: Before you create any plots, it is a good idea to provide a short
-introduction into the dataset that you are planning to explore. Replace this
-quoted text with that general information!
 
 # Univariate Plots Section
 
@@ -44,9 +38,281 @@ forget to add a comment after each plot or closely-related group of plots!
 There should be multiple code chunks and text sections; the first one below is
 just to help you get started.
 
-```{r echo=FALSE, Univariate_Plots}
+Size of dataset
 
+```{r echo=FALSE, Univariate_Plots}
+dim(wine_df)
 ```
+
+The dataset consists of 13 variables and 1599 observations.
+
+Structure of dataset
+
+```{r echo=FALSE}
+wine_df$quality <- ordered(wine_df$quality, levels=c(1:10))
+str(wine_df)
+```
+
+Converted the quality variable from type integer to type factor, as it denotes the ratings received by the wine.
+
+
+Statistical summary of the given dataset
+
+```{r echo=FALSE}
+summary(wine_df)
+```
+
+### Analyzing variable : Quality
+
+To check out the most frequent quality of wines available in the dataset.
+
+```{r}
+table(wine_df$quality)
+```
+
+The above stats shows the available number of different qualities of red wine 
+present in the given dataset. The best quality of red wine available in the 
+given dataset is ___Quality 8__  and it is totally 18 in number, Red wine with 
+__Quality 7__ is 199 in number. And the most avaliable qualities of red wine are
+__Quality 5__ and __QUality 6__ with 681 and 638 numbers respectively.
+
+```{r echo=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=quality)) +
+  geom_bar()+
+  labs(x = 'Quality of wines', y = 'Frequency', title = 'Bargraph of frequency vs Quality of available wines')
+```
+
+So from the above two analysis: it is observed that wines with quality ratings 5 
+and 6 is the most available in the given dataset. 
+
+***
+
+### Analyzing variable : fixed acidity
+
+__Description of fixed acidity:__ most acids involved with wine or fixed or 
+nonvolatile (do not evaporate readily).
+
+```{r echo=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=fixed.acidity))+
+  geom_histogram(binwidth = 0.5, color = 'black', fill = 'white')+
+  scale_x_continuous(limits = c(4.5,16), breaks = seq(4.5,16,0.5))+
+  labs(title = 'Histogram of fixed acidity')
+```
+
+From the above diagram it is clear that most of the wines in the given dataset 
+have fixed acidity between 6.5 and 8 g/dm^3^.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+ggplot(data = wine_df, aes(x=fixed.acidity))+
+  geom_histogram(binwidth = 1, color = 'black', fill = 'white')+
+  scale_x_continuous(limits = c(4.5,16), breaks = seq(4.5,16,1))+
+  facet_wrap(  ~ quality, ncol=2, scales = 'free_y')+
+  labs(title = 'Faceting the distribution of fixed.acidity based on wine quality')
+```
+
+The above facetted graph, confirms the previous two analysis that the red wines 
+with __Quality 5 and 6__ are the most available in the dataset and their fixed 
+acidity mostly ranges between 6.5 g/dm^3^ and 8 g/dm^3^ respectively. And the best
+two  available qualities of wine __Quality 7 and 8__ have a very low count and 
+their  value of fixed acidity usually varies between 6.5 and 11.5 g/dm^3^. 
+Also __Quality 3 and 4__ wines have value of fixed acidity varying between 6,5 
+and 8.5 g/dm^3^.
+
+
+```{r echo=FALSE}
+by(wine_df$fixed.acidity, wine_df$quality, summary)
+```
+
+The above statistics show the summary of fixed acidity present in different 
+qualities of red wine.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=quality, y=fixed.acidity))+
+  geom_boxplot()+
+  coord_cartesian(ylim = c(6,10.5))+
+  labs(title = 'Boxplot of fixed acidity vs Quality of red wine')
+```
+
+The __Quality 8__ of red wine has median fixed acidity  of 8.25 g/dm^3^ and mean
+fixed acidity of 8.567 g/dm^3^. The __Quality 7__ of red wine has median fixed 
+acidity of 8.8 g/dm^3^ and mean fixed acidity of 8.872 g/dm^3^.  
+
+The most available __Quality 5__ of red wine has median fixed-acidity of 7.8 
+g/dm^3^ and mean fixed-acidity of 8.167 g/dm^3^. And __Quality 6__ of red wine  
+has median fixed-acidity of 7.9 g/dm^3^ and mean fixed-acidity of 8.347 g/dm^3^.
+
+And the available poor qualities of red wine namely __Quality 3 and Quality 4__
+have median fixed acidity of 7.5 g/dm^3^ each and their mean value of fixed 
+acidity is 8.36 and 7.79 g/dm^3^ respectively.
+
+So from the above anlaysis, fixed acidity volume does somewhat improve the 
+quality of the condidered red wine.
+
+***
+
+### Analyzing variable : volatile acidity
+
+__Description of volatile acidity:__ the amount of acetic acid in wine, which at
+too high of levels can lead to an unpleasant, vinegar taste
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=volatile.acidity))+
+  geom_histogram(binwidth = 0.1, color = 'black', fill = 'white')+
+  scale_x_continuous(limits = c(0,1.6), breaks = seq(0,1.6,0.1))+
+  labs(title = 'Histogram of volatile acidity content in the available red wines')
+```
+
+From the above histogram of volatile acidity - most of the wines have volatile 
+acidity in the range of 0.3 to 0.7 g/dm^3^.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+ggplot(data = wine_df, aes(x=volatile.acidity))+
+  geom_histogram(binwidth = 0.1, color = 'black', fill = 'white')+
+  scale_x_continuous(limits = c(0,1.6), breaks = seq(0,1.6,0.1))+
+  facet_wrap(  ~ quality, ncol=2, scales = 'free_y')+
+  labs(title = 'Faceting the distribution of volatile.acidity based on wine quality')
+```
+
+Most of the red wines with __Quality 8 and Quality 7__ have volatile acidity 
+usually  ranging from 0.2 to 0.4 g/dm^3^. Also their distribution is 
+right-skewed,so we can infer from this that good quality red wines have usually
+low values of volatile acidity.
+
+Red wines of __Quality 6 and 5__ are roughly normally distributed and their 
+values usually range from 0.2 to 0.7 g/dm^3^.
+
+Poor quality red wines of __Quality 3 and 4__ have their values ranging from
+0.4 to 1 g/dm^3^.
+
+```{r echo=FALSE}
+by(wine_df$volatile.acidity, wine_df$quality, summary)
+```
+
+The above statistics show the summary of volatile acidity present in different 
+qualities of red wine.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=quality, y = volatile.acidity))+
+  geom_boxplot()+
+  coord_cartesian(ylim = c(0.25,1.05))+
+  labs(title = 'Boxplot of volatile acidity vs Quality of red wine')
+```
+
+The above box plot shows that good quality red wines have lower amounts of 
+volatile acids present in them.
+
+The best available red wine of __Quality 8 and Quality 7__ have median volatile 
+acidity of 0.37 g/dm^3^ each and mean volatile acidity of 0.4233 and 0.4033 
+g/dm^3^. And as the quality of red wine degrades amount of volatile acidity 
+present in them also increases.
+
+***
+
+### Analyzing variable : Citric Acid
+
+__Description of Citric acid:__  found in small quantities, citric acid can add 
+'freshness' and flavor to wines.
+
+```{r echo=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=citric.acid))+
+  geom_histogram(binwidth = 0.05, color = 'black', fill = 'white')+
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,1,0.1))+
+  labs(title = 'Histogram of Citric acid content in the available red wines')
+```
+
+The above histogram on amount of citric acid in the red wines is right-skewed.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+ggplot(data = wine_df, aes(x=citric.acid))+
+  geom_histogram(binwidth = 0.05, color = 'black', fill = 'white')+
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,1,0.1))+
+  facet_wrap(  ~ quality, ncol=2, scales = 'free_y')+
+  labs(title = 'Faceting the distribution of citric acid based on wine quality')
+```
+
+The above faceted graph shows the amount of citric acid present in different 
+qualities of red wine.  
+Good red wines of __Quality 8 and 7__ have citric acid in the range 0.3 to 0.55 
+g/dm^3^.  
+Red wines of __Quality 6, 5 and 4__ have  roughly right skewed distribution and the
+amount of citric acid in them range from 0 t0 0.6 g/dm^3^  and their values
+usually lie around 0.35 to 0.6 g/dm^3^.   
+Poor quality red wines of __Quality 3__ use citric acid in the range from 
+0 to 0.6 g/dm^3^.
+
+```{r echo=FALSE}
+by(wine_df$citric.acid, wine_df$quality, summary)
+```
+
+The above statistics show the summary of citric acid present in different 
+qualities of red wine.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=quality, y = citric.acid))+
+  geom_boxplot()+
+  coord_cartesian(ylim = c(0,0.55))+
+  labs(title = 'Boxplot of citric acid vs Quality of red wine')
+```
+
+The above box plot shows that good quality red wines have higher amounts of 
+citric acids present in them.
+
+The best available red wine of __Quality 8 and Quality 7__ have median citric 
+acid of 0.42 g/dm^3^ and 0.4 g/dm^3^ and mean volatile acidity of 0.3911 g/dm^3^
+and 0.3752 g/dm^3^. And as the quality of red wine degrades amount of citric 
+acid present in them also deceases.
+
+***
+
+### Analyzing variable : residual sugar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 > **Tip**: Make sure that you leave a blank line between the start / end of
 each code block and the end / start of your Markdown text so that it is
