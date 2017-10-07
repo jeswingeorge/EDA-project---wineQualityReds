@@ -266,6 +266,128 @@ acid present in them also deceases.
 
 ### Analyzing variable : residual sugar
 
+__Description of residual sugar:__ the amount of sugar remaining after 
+fermentation stops, it is rare to find wines with less than 1 gram/liter and 
+wines with greater than 45 grams/liter are considered sweet.
+
+```{r echo=FALSE, fig.width=10}
+ggplot(wine_df, aes(x=residual.sugar))+
+  geom_histogram(binwidth = 0.5)+
+  scale_x_continuous(limits = c(0.5,16), breaks = seq(0.5,16,1))+
+  labs(title = 'Histogram of residual sugar content in the available red wines')
+```
+
+The distribution obtained above is right-skewed distribution. And most of the 
+available red wines have residual sugar in the range of 1.5 to 2.5 grams/liter.
+
+```{r echo=FALSE, fig.width=10}
+ggplot(wine_df, aes(x=residual.sugar))+
+  geom_histogram(binwidth = 0.5)+
+  scale_x_continuous(limits = c(0.5,16), breaks = seq(0.5,16,1))+
+  facet_wrap( ~ quality,ncol=2, scales = 'free_y')+
+  labs(title = 'Faceting the distribution of residual sugar content based on wine quality in the available red wines')
+```
+
+The above diagram shows that almost all qualities of red wines use residual 
+sugar in amounts between 1.5 to 2.5 grams/liter. And scarcely do the values of 
+the residual sugar level varies. So chances are that the presence of residual 
+sugar must be almost fixed in all red wines.
+
+```{r echo=FALSE}
+by(wine_df$residual.sugar, wine_df$quality,summary)
+```
+
+The above statistics show the summary of residual sugar present in different 
+qualities of red wine.
+
+```{r echo=FALSE, fig.width=10}
+ggplot(wine_df, aes(x = quality, y = residual.sugar))+
+  geom_boxplot()+
+  coord_cartesian(ylim = c(1.5,3.5))+
+  labs(title = 'Boxplot of amount of residual sugar level vs Quality of red wines')
+```
+
+The above graph using boxplots and the statistical summary above that proves 
+that in almost all qualities of red wines the median quantity of residual sugar
+ranges from 2.1 to 2.3 grams/liter. And the mean quantity of residual sugar is 
+around  2.5 grams/liter.
+
+***
+
+### Analyzing variable : chlorides
+
+__Description of chlorides:__ The amount of salt in the wine.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=chlorides))+
+  geom_histogram(binwidth = 0.025,color = 'black', fill='white')+
+  scale_x_continuous(limits = c(0,0.62), breaks = seq(0,0.62,0.05))+
+  labs(title = 'Histogram of amount of chlorides in the available red wines')
+```
+
+The above histogram has a right skewed distribution. And it can be concluded 
+from the distribution that the chlorides added to the red wines are in the range
+of 0.05 to 0.1 grams.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=chlorides))+
+  geom_histogram(binwidth = 0.025,color = 'black', fill='white')+
+  scale_x_continuous(limits = c(0,0.62), breaks = seq(0,0.62,0.05))+
+  facet_wrap( ~ quality, ncol=2, scales = 'free_y')+
+  labs(title = 'Faceting the distribution of chlorides based on wine quality in the available red wines')
+```
+
+The above faceted graph shows almost all qualities of wine have their chlorides 
+amount in the range of 0.05 to 1 grams. So it can be inferred that it is 
+necessary to have chlorides in the abive mentioned range for the preapartaion of
+the above wine.
+
+```{r}
+by(wine_df$chlorides, wine_df$quality, summary)
+```
+
+```{r}
+ggplot(wine_df, aes(x=quality,y=chlorides))+
+  geom_boxplot()+
+  coord_cartesian(ylim = c(0.05,0.15))+
+  labs(title='Boxplot of amount of chlorides vs the quality of red wine')
+```
+
+Using the boxplot and statistical summary it is seen that chlorides are used in 
+small quanities of 0.05 to 0.15 grams. And the best available red wine of 
+__quality 8__ uses the least median amount of 0.0705 grams and as the quality of
+red wine decreases the chloride content increases along with it.   
+
+So it can be assumed that the best quality of red wine has the least chloride
+content in it.
+
+***
+
+### Analyzing variable : free.sulfur.dioxide
+
+__Description of free.sulfur.dioxide:__ The free form of SO2 exists in 
+equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it 
+prevents microbial growth and the oxidation of wine
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=free.sulfur.dioxide))+
+  geom_histogram(binwidth = 1, color = 'black', fill='white')+
+  scale_x_continuous(limits = c(1,72), breaks = seq(1,72,1))+
+  labs(title = 'Histogram of free.sulfur.dioxide content in the available red wines')
+```
+
+The distribution of free.sulfur.dioxide content in the available red wines is 
+right-skewed in nature and its mode value at 5.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=free.sulfur.dioxide))+
+  geom_histogram(binwidth = 1, color = 'black', fill='white')+
+  scale_x_continuous(limits = c(1,72), breaks = seq(1,72,1))+
+  facet_wrap( ~ quality, ncol = 2) +
+  labs(title = 'Faceting the distribution of free.sulfur.dioxide based on wine quality')
+```
+
+The faceted distribution of free suplfur dioxide based on quality shows that 
 
 
 
@@ -277,6 +399,23 @@ acid present in them also deceases.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Faceting the distribution of chlorides based on wine quality in the available red wines
+
+echo=FALSE, message=FALSE, warning=FALSE,fig.width=10
 
 
 
