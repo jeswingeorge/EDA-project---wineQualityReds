@@ -31,13 +31,6 @@ wine_df <- read.csv('wineQualityReds.csv', header = TRUE, sep = ',')
 
 # Univariate Plots Section
 
-> **Tip**: In this section, you should perform some preliminary exploration of
-your dataset. Run some summaries of the data and create univariate plots to
-understand the structure of the individual variables in your dataset. Don't
-forget to add a comment after each plot or closely-related group of plots!
-There should be multiple code chunks and text sections; the first one below is
-just to help you get started.
-
 Size of dataset
 
 ```{r echo=FALSE, Univariate_Plots}
@@ -99,8 +92,8 @@ ggplot(data = wine_df, aes(x=fixed.acidity))+
   labs(title = 'Histogram of fixed acidity')
 ```
 
-From the above diagram it is clear that most of the wines in the given dataset 
-have fixed acidity between 6.5 and 8 g/dm^3^.
+The above distribution is right-skewed and most of the wines in the given 
+dataset have fixed acidity between 6.5 and 8 g/dm^3^.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
 ggplot(data = wine_df, aes(x=fixed.acidity))+
@@ -272,7 +265,7 @@ wines with greater than 45 grams/liter are considered sweet.
 
 ```{r echo=FALSE, fig.width=10}
 ggplot(wine_df, aes(x=residual.sugar))+
-  geom_histogram(binwidth = 0.5)+
+  geom_histogram(binwidth = 0.5,color='black',fill='white')+
   scale_x_continuous(limits = c(0.5,16), breaks = seq(0.5,16,1))+
   labs(title = 'Histogram of residual sugar content in the available red wines')
 ```
@@ -282,7 +275,7 @@ available red wines have residual sugar in the range of 1.5 to 2.5 grams/liter.
 
 ```{r echo=FALSE, fig.width=10}
 ggplot(wine_df, aes(x=residual.sugar))+
-  geom_histogram(binwidth = 0.5)+
+  geom_histogram(binwidth = 0.5,color='black',fill='white')+
   scale_x_continuous(limits = c(0.5,16), breaks = seq(0.5,16,1))+
   facet_wrap( ~ quality,ncol=2, scales = 'free_y')+
   labs(title = 'Faceting the distribution of residual sugar content based on wine quality in the available red wines')
@@ -349,7 +342,7 @@ by(wine_df$chlorides, wine_df$quality, summary)
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=chlorides))+
   geom_boxplot()+
-  coord_cartesian(ylim = c(0.05,0.15))+
+  coord_cartesian(ylim = c(0.05,0.14))+
   labs(title='Boxplot of amount of chlorides vs the quality of red wine')
 ```
 
@@ -510,7 +503,8 @@ wines denotes better quality.
 
 ### Analyzing variable : pH
 
-__Description of pH:__ describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale.
+__Description of pH:__ describes how acidic or basic a wine is on a scale from 0
+(very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=pH))+
@@ -530,7 +524,10 @@ ggplot(wine_df, aes(x=pH))+
   facet_wrap( ~ quality, ncol=2, scales = 'free_y')
 ```
 
-From the above faceted graph it can be seen that __quality 5 to 8__ have normal distribution and their values range from 3.14 to 3.44. The graph of distribution of pH values for different qualities of red wine are not much helpful in finding how pH values affect quality.
+From the above faceted graph it can be seen that __quality 5 to 8__ have normal 
+distribution and their values range from 3.14 to 3.44. The graph of distribution
+of pH values for different qualities of red wine are not much helpful in finding
+how pH values affect quality.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 by(wine_df$pH, wine_df$quality,summary)
@@ -540,12 +537,14 @@ by(wine_df$pH, wine_df$quality,summary)
 ggplot(wine_df, aes(x=quality,y=pH))+
   geom_boxplot()+
   labs(title = 'Boxplot of pH vs Quality for red wine')+
-  coord_cartesian(ylim = c(3.1,3.55))
+  coord_cartesian(ylim = c(3.15,3.55))
 ```
 
-
-
-
+From the statistical summary and boxplot it is observed that median pH value of 
+__quality 8__ red wine is 3.23 and it is lower than other qualities of red wine 
+but its mean pH value is 3.267 which is higher than the mean pH values of other 
+quality of wines. So it cannot be generally stated that pH has a direct 
+relationship with the quality of wine.
 
 ***
 
@@ -561,7 +560,8 @@ ggplot(wine_df, aes(x=sulphates))+
   labs(title = 'Histogram of distribution of sulphates for red wines')
 ```
 
-
+The distribution of sulphates in red wine has a right-skewed distribution with 
+the mode value of sulphates lying in the range from 0.5 to 0.6.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
@@ -572,7 +572,10 @@ ggplot(wine_df, aes(x=sulphates))+
   facet_wrap( ~ quality, ncol = 2, scales = 'free_y')
 ```
 
-
+From the faceted distribution of sulphates considering quality as the 
+categorical variable it is seen that that the amount of sulphates in higher 
+quality of wines such as __quality 8 and 7__ have slightly higher higher amount 
+of sulphates than those ranging from quality 3 to quality 6.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
@@ -583,16 +586,20 @@ by(wine_df$sulphates, wine_df$quality,summary)
 ggplot(wine_df, aes(x=quality,y=sulphates))+
   geom_boxplot()+
   labs(title='Boxplot of amount of sulphates vs Quality for red wine')+
-  coord_cartesian(ylim = c(0.48,0.85))
+  coord_cartesian(ylim = c(0.48,0.84))
 ```
 
-
+From the statistical summary and boxplot of sulphates vs the quality of red 
+wines it is observed that better quality red wines such as __quality 8 and 7__ 
+have higher median amd mean value of sulphates as compared to that of other 
+lower quality red wines.
 
 ***
 
 ### Analyzing variable : alcohol
 
-__Description of alcohol:__ the percent alcohol content of the wine.
+__Description of alcohol:__ the percent alcohol content of the wine measured in 
+% by volume.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=alcohol))+
@@ -600,6 +607,10 @@ ggplot(wine_df, aes(x=alcohol))+
   labs(title = 'Histogram of distribution of alcohol in red wines')+
   scale_x_continuous(limits = c(8,15), breaks = seq(8,15,0.5))
 ```
+
+The alcohol content in red wines have a right-skewed distribution with most of 
+the red wines having alcohol content in range from 9-10 % by volume.
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=alcohol))+
@@ -609,6 +620,10 @@ ggplot(wine_df, aes(x=alcohol))+
   facet_wrap( ~quality, ncol=2, scales = 'free_y')
 ```
 
+From the faceted distribution of alcohol based on quality it can be observed 
+that usually good quality red wines having quality ratings of 
+__quality 8 and 7__ have higher alcohol content than other quality of available 
+red wines.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 by(wine_df$alcohol, wine_df$quality, summary)
@@ -618,92 +633,172 @@ by(wine_df$alcohol, wine_df$quality, summary)
 ggplot(wine_df, aes(x=quality,y=alcohol))+
   geom_boxplot()+
   labs(title='Boxplot of alcohol content vs quality of red wine')+
-  coord_cartesian(ylim = c(9,13))
+  coord_cartesian(ylim = c(9.2,13))
 ```
 
+From the statistical summary and boxplot above it can be assumed that high 
+quality of red wines have higher alcohol content % by volume as compared to 
+other lower quality wines.
 
+***
 
+### Analyzing created variable : Total_acidity
 
+__Description of Total_acidity :__ As there are three types of acidity in the 
+red wine so i was just curious to find out the net effect of all acidity on the 
+quality of red wine.
 
+So i created a new variable called __Total_acidity__ (measured in g/dm^3^) which
+is the sum of fixed  acidity, volatile acidity and citirc acid. 
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+wine_df <- wine_df %>%
+  mutate(Total_acidity = fixed.acidity + citric.acid + volatile.acidity)
 
+ggplot(wine_df, aes(x=Total_acidity))+
+  geom_histogram(binwidth = 0.5, color='black', fill='white')+
+  scale_x_continuous(limits=c(5,17.5), breaks = seq(5,17.5,0.5))+
+  labs(title='Histogram of distribution of total_acidity in red wines')
+```
 
+The above histogram has a right-skewed distribution with majority of the red 
+wines having total acidity in the range of 7.5 to 9 g/dm^3^.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=Total_acidity))+
+  geom_histogram(binwidth = 0.5, color='black', fill='white')+
+  scale_x_continuous(limits=c(5,17.5), breaks = seq(5,17.5,0.5))+
+  labs(title='Faceting the distribution of total_acidity in red wines based on quality')+
+  facet_wrap( ~quality, ncol=2, scales = 'free_y')
+```
 
+The faceted graph shows the distribution of total acidity in the available red 
+wine for different qualities.Quality 6 and 5 have a right-skewed distribution. 
+And the distibution for better qualilty 7 and 8 have uneven distribution.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+by(wine_df$Total_acidity, wine_df$quality,summary)
+```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=quality, y=Total_acidity))+
+  geom_boxplot()+
+  labs(title='Boxplot of total acidity vs quality of red wine')+
+  coord_cartesian(ylim = c(7.5,11))
+```
 
+The statistical summary and boxplot of total acidity with respect to quality 
+does not show any type of relation between them.
 
+***
 
+### Analyzing created variable : prop_free_so2
 
-facet_wrap( ~ quality, ncol = 2, scales='free_y') +
-  labs(title = 'Faceting the distribution of free.sulfur.dioxide based on wine quality')
+__Description of prop_free_so2 :__ It is the ratio of free.sulfur.dioxide to 
+total.sulfur.dioxide present in the concerned red wine. As the 
+total.sulfur.dioxide present in the red wine contains both free.sulfur.dioxide 
+and bound.sulfur.dioxide so to determine the proportion in which the 
+free.sulfur.dioxide is used and to check how this ratio affect the quality of 
+red wine we use this variable.
 
-Faceting the distribution of chlorides based on wine quality in the available red wines
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+wine_df <- wine_df %>%
+  mutate(prop_free_so2 = free.sulfur.dioxide/total.sulfur.dioxide)
 
-echo=FALSE, message=FALSE, warning=FALSE,fig.width=10
+ggplot(wine_df, aes(x=prop_free_so2))+
+  geom_histogram(binwidth = 0.1, color='black',fill='white')+
+  labs(title='Histogram of distribution of proportion of free SO2 in red wine')+
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,1,0.1))
+```
 
+The above histogram shows distribution of proportion of free SO^2^ in the red 
+wine and most of the red wines have the proportion usually between 0.1 to 0.5.  
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=prop_free_so2))+
+  geom_histogram(binwidth = 0.1, color='black',fill='white')+
+  labs(title='Faceting the distribution of proportion of free SO2 in red wine based on quality')+
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,1,0.1))+
+  facet_wrap( ~ quality, ncol=2, scales = 'free_y')
+```
 
+The above faceted distribution shows distribution of proportion of free SO^2^ in
+various qualities of red wine.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+by(wine_df$prop_free_so2, wine_df$quality,summary)
+```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=quality, y=prop_free_so2))+
+  geom_boxplot()+
+  coord_cartesian(ylim = c(0.2,0.6))+
+  labs(title='Boxplot of free sulfur dioxide to the quality of red wine')
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-> **Tip**: Make sure that you leave a blank line between the start / end of
-each code block and the end / start of your Markdown text so that it is
-formatted nicely in the knitted text. Note as well that text on consecutive
-lines is treated as a single space. Make sure you have a blank line between
-your paragraphs so that they too are formatted for easy readability.
+The statistical summary and boxplot gives the median and mean value of 
+proportion of free SO^2^ with respect to total sulfur dioxide. 
 
 # Univariate Analysis
 
-> **Tip**: Now that you've completed your univariate explorations, it's time to
-reflect on and summarize what you've found. Use the questions below to help you
-gather your observations and add your own if you have other thoughts!
-
 ### What is the structure of your dataset?
 
+The above dataset consists of 1599 observations and 15 variables.    
+I converted one of the variables _quality_ to ordered factors which helps in
+making comparison between different qualities of wine. Also i added 2 variables
+to the dataset namely Total_acidity and prop_free_SO2.
+
+_Quality of wine :_ 1 < 2 < 3 < 4 <5 < 6 <7 <8 < 9 < 10
+
 ### What is/are the main feature(s) of interest in your dataset?
+
+* In the given dataset, 6 qualities of datset are available namely 
+_QUality 3, QUality 4, QUality 5, QUality 6, QUality 7 and QUality 8_.
+
+* Of the available qualities of red wines _quality 5_ and _quality 6_ are the 
+majority 681 and 638 respectively.
 
 ### What other features in the dataset do you think will help support your \
 investigation into your feature(s) of interest?
 
+The following analysis made in the above univariate analysis might help in 
+determining the chemical property which help in influencing the quality of red
+wines-
+
+* Good quality red wines have lower amounts of volatile acids present in them.
+* Citric acid content is higher in good quality wines.
+* Amount of residual sugar content is almost same across all qualities of red 
+wine.
+* Good quality of red wines have lower density.
+* Sulphate content is higher in good quality red wines.
+* Alcohol content is higher in good quality red wines.
+
 ### Did you create any new variables from existing variables in the dataset?
+
+Yes, i created 2 new variables from the existing variables.
+- __Total_acidity :__ As there are three types of acidity in the 
+red wine so i was just curious to find out the net effect of all acidity on the 
+quality of red wine. So i created this variable which is the sum of fixed  
+acidity, volatile acidity and citirc acid. (measured in g/dm^3^)
+
+- __prop_free_so2 :__ It is the ratio of free.sulfur.dioxide to 
+total.sulfur.dioxide present in the concerned red wine. As the 
+total.sulfur.dioxide present in the red wine contains both free.sulfur.dioxide 
+and bound.sulfur.dioxide so to determine the proportion in which the 
+free.sulfur.dioxide is used and to check how this ratio affect the quality of 
+red wine we use this variable.
 
 ### Of the features you investigated, were there any unusual distributions? \
 Did you perform any operations on the data to tidy, adjust, or change the form \
 of the data? If so, why did you do this?
 
+Yes, i changes the quality variable from numeric type to ordered factor type to 
+treat quality as a categorical variable. Morover it is given that in the given 
+dataset there are no missing values i.e., NA.
+
+```
+echo=FALSE, message=FALSE, warning=FALSE,fig.width=10
+```
 
 # Bivariate Plots Section
 
