@@ -44,7 +44,6 @@ The dataset consists of 13 variables and 1599 observations.
 Structure of dataset
 
 ```{r echo=FALSE}
-#wine_df$quality <- ordered(wine_df$quality, levels=c(1:10))
 str(wine_df)
 ```
 
@@ -841,6 +840,16 @@ correlation of fixed acidity with quality is very low.
 * Alcohol has negative correlation with density and positive correlation with 
 alcohol.  
 
+__Scatterplot matrix__
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10, fig.height=10}
+splom(cwine_df[c(1,2,7,8,9,11,12)], data = cwine_df, groups = NULL,  axis.line.tck=0,axis.text.alpha = 0)
+```
+
+The above scatter plot matrix has been made by selecting the variables from the
+correlation matrix plot. This graph helps in getting the idea of scatterplot 
+that we will get when plotting different variables in the datset,
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=pH, y=fixed.acidity))+
   geom_point(color='grey60')+
@@ -859,60 +868,91 @@ ggplot(wine_df, aes(x=pH, y=density))+
 ```
 
 The above graph shows the scatterplot between density and pH of red wine it 
-shows the negative relation between density and pH. Also the regression line 
+shows the negative corelation between density and pH. Also the regression line 
 used here is a loess curve.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df,aes(y=density,x=alcohol))+
+  geom_point(color='grey60')+
+  stat_smooth(method = 'loess',color='red', linetype='solid')+
+  labs(x='Alcohol content', title='Scatterplot of density vs alcohol content in red wine')
+```
 
+The above graph shows scatterplot of density vs alcohol content in red wine. 
+These parameters are negatively correlated and the negative correlation is shown
+using a loess curve.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df,aes(x=quality, y = alcohol))+
+  geom_point(alpha=1/5,color='grey60')+
+  geom_line(stat = 'summary', fun.y = mean, color='blue') +
+  geom_line(stat = 'summary', fun.y = median, color = 'red') +
+  labs(title='Scatterplot of Quality vs alcohol content of red wine')
+```
 
+The above scatterplot has quality as discrete variable and for higher quality of
+red wine the alcohol content is also high which also proves the positive 
+correlation between them. The blue line denotes the mean value of alcohol 
+content across each quality. The red line denotes the median value of alcohol 
+content across each quality.
 
+In the univariate analysis, boxplot graph was shown to prove the relation 
+between quality and alcohol content in red wine.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=quality, y=volatile.acidity))+
+  geom_point(alpha=1/2,color='grey60')+
+  geom_line(stat = 'summary', fun.y = mean,color='blue') +
+  geom_line(stat = 'summary', fun.y = median, color='red') +
+  labs(title='Scatterplot of Quality vs volatile acidity of red wine')
+```
 
+The above scatterplot has quality as discrete variable and for higher quality of
+red wine the volatile acidity is very low which also proves the negative 
+correlation between them. The blue line denotes the mean value of volatile 
+acidity across each quality. The red line denotes the median value of volatile 
+acidity across each quality.
 
-
-
-
-
-
-
-
-
+In the univariate analysis, boxplot graph was shown to prove the relation 
+between quality and volatile acidity in red wine.
 
 # Bivariate Analysis
-
-> **Tip**: As before, summarize what you found in your bivariate explorations
-here. Use the questions below to guide your discussion.
 
 ### Talk about some of the relationships you observed in this part of the \
 investigation. How did the feature(s) of interest vary with other features in \
 the dataset?
 
+The bivarite analysis, gave an insight into the correlation  between quality and
+other variables with the help of correlation coefficient and scatterplot. It was
+observed that quality of red wine improves with the decreases in volatile 
+acidity. The alcohol content in red wine also improves the wine quality. From 
+the correlation matrix it was also observed that residual sugar and other 
+parameters don't have much effect on the quality of red wine.
+
 ### Did you observe any interesting relationships between the other features \
 (not the main feature(s) of interest)?
 
+The relationship between pH and fixed/total acidity they have negative 
+correlation i.e., as pH value increases acidity content decreases. Also, pH is 
+negatively correlated with the density of the red wine. And density of the red
+wine is also having negative correlation with the alcohol content in the red 
+wine. It is also found that citric acid is positively correlated with fixed 
+acidity of red wine but has a negative correlation with volatile acidity.
+
+The bivariate analysis helped in improving the insight into the relationship 
+between quality and variables such as residual sugar,density and citric acid. It 
+was found that the presence of these variables don't have much impact on the 
+quality of red wines.
+
 ### What was the strongest relationship you found?
+
+The quality of red wine is highly dependant on volatile acidity and alcohol 
+content of the red wine. The quality and volatile acidity has  negative 
+correlation. The quality and alcohol content has a positive correlation between 
+them. 
 
 
 # Multivariate Plots Section
-
-
-__Scatterplot matrix__
-
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10, fig.height=10}
-splom(cwine_df[c(1,2,7,8,9,11,12)], data = cwine_df, groups = NULL,  axis.line.tck=0,axis.text.alpha = 0)
-```
-
-The above scatter plot matrix has been made by selecting the variables from the
-correlation matrix plot. This graph helps in getting the idea of scatterplot 
-that we will get when plotting different variables in the datset,
-
-
-
-
-
-
-
-
 
 > **Tip**: Now it's time to put everything together. Based on what you found in
 the bivariate plots section, create a few multivariate plots to investigate
