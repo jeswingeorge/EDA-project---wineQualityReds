@@ -854,7 +854,7 @@ that we will get when plotting different variables in the datset,
 ggplot(wine_df, aes(x=pH, y=fixed.acidity))+
   geom_point(color='grey60')+
   stat_smooth(color='red',method='lm')+
-  labs(title='Scatterplot of Fixed-acidity vs pH of red wine')
+  labs(title='Scatterplot of Fixed-acidity vs pH of red wine',y='fixed acidity (tartaric acid-g/dm^3)')
 ```
 
 The above graph shows the negative correlation between fixed acidity and pH 
@@ -864,7 +864,7 @@ value of red wine. Also a linear regression line is added to a scatterplot.
 ggplot(wine_df, aes(x=pH, y=density))+
   geom_point(color='grey60')+
   stat_smooth(color='red')+
-  labs(title='Scatterplot of density vs pH of red wine')
+  labs(title='Scatterplot of density vs pH of red wine',y='density (g/cm^3)')
 ```
 
 The above graph shows the scatterplot between density and pH of red wine it 
@@ -875,7 +875,8 @@ used here is a loess curve.
 ggplot(wine_df,aes(y=density,x=alcohol))+
   geom_point(color='grey60')+
   stat_smooth(method = 'loess',color='red', linetype='solid')+
-  labs(x='Alcohol content', title='Scatterplot of density vs alcohol content in red wine')
+  labs(title='Scatterplot of density vs alcohol content in red wine', 
+       x = 'alcohol (% by volume)', y='density (g/cm^3)')
 ```
 
 The above graph shows scatterplot of density vs alcohol content in red wine. 
@@ -887,7 +888,8 @@ ggplot(wine_df,aes(x=quality, y = alcohol))+
   geom_point(alpha=1/5,color='grey60')+
   geom_line(stat = 'summary', fun.y = mean, color='blue') +
   geom_line(stat = 'summary', fun.y = median, color = 'red') +
-  labs(title='Scatterplot of Quality vs alcohol content of red wine')
+  labs(title='Scatterplot of Quality vs alcohol content of red wine', 
+       y = 'alcohol (% by volume)')
 ```
 
 The above scatterplot has quality as discrete variable and for higher quality of
@@ -904,7 +906,8 @@ ggplot(wine_df, aes(x=quality, y=volatile.acidity))+
   geom_point(alpha=1/2,color='grey60')+
   geom_line(stat = 'summary', fun.y = mean,color='blue') +
   geom_line(stat = 'summary', fun.y = median, color='red') +
-  labs(title='Scatterplot of Quality vs volatile acidity of red wine')
+  labs(title='Scatterplot of Quality vs volatile acidity of red wine',
+       y='volatile acidity (acetic acid - g/dm^3)')
 ```
 
 The above scatterplot has quality as discrete variable and for higher quality of
@@ -954,16 +957,51 @@ them.
 
 # Multivariate Plots Section
 
-> **Tip**: Now it's time to put everything together. Based on what you found in
-the bivariate plots section, create a few multivariate plots to investigate
-more complex interactions between variables. Make sure that the plots that you
-create here are justified by the plots you explored in the previous section. If
-you plan on creating any mathematical models, this is the section where you
-will do that.
 
-```{r echo=FALSE, Multivariate_Plots}
-
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+wine_df$quality <- ordered(wine_df$quality, levels=c(1:10))
+ggplot(data = wine_df,aes(y=density, x=alcohol,color=quality))+
+  geom_point(size=5)+
+  scale_color_brewer(type='div', guide = guide_legend(title = 'Quality'))+
+  ggtitle('Alcohol and density of red wine based on Quality')+
+  labs(x = 'Alcohol (% by volume)',y='density (g/cm^3)')
 ```
+
+Analyzing the 
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(data = wine_df,aes(y=pH, x=alcohol,color=quality))+
+  geom_point(size=5)+
+  scale_color_brewer(type='seq', guide = guide_legend(title = 'Quality'))+
+  ggtitle('pH and alcohol of red wine based on Quality')+
+  labs(x = 'Alcohol (% by volume)')
+```
+
+From the 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(data = wine_df,aes(x=pH, y=fixed.acidity,color=quality))+
+  geom_point(size=5)+
+  scale_color_brewer(type='seq', guide = guide_legend(title = 'Quality'))+
+  ggtitle('pH and fixed acidity of red wine based on Quality')+
+  labs(y='fixed acidity (tartaric acid - g/dm^3)')
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=alcohol,y=volatile.acidity,color=quality))+
+  geom_point(size=4)+
+  scale_color_brewer(type='div', guide = guide_legend(title = 'Quality'))+
+  ggtitle('volatile acidity vs alcohol content of red wine based on quality')+
+  labs(x = 'Alcohol (% by volume)', y = 'volatile acidity (acetic acid - g/dm^3)')
+```
+
+
+
+
 
 # Multivariate Analysis
 
@@ -989,24 +1027,31 @@ units), and good aesthetic choices (e.g. color, transparency). After each plot,
 make sure you justify why you chose each plot by describing what it shows.
 
 ### Plot One
-```{r echo=FALSE, Plot_One}
-
+```{r echo=FALSE,fig.width=10}
+ggplot(data = wine_df, aes(x=quality)) +
+  geom_bar()+
+  labs(x = 'Quality of wines', y = 'Frequency', title = 'Bargraph of frequency vs Quality of available wines')
 ```
 
 ### Description One
 
 
 ### Plot Two
-```{r echo=FALSE, Plot_Two}
-
+__Plotting the Correlation matrix__
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+corrplot(mcor)
 ```
 
 ### Description Two
 
 
 ### Plot Three
-```{r echo=FALSE, Plot_Three}
-
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=alcohol,y=volatile.acidity,color=quality))+
+  geom_point(size=4)+
+  scale_color_brewer(type='div', guide = guide_legend(title = 'Quality'))+
+  ggtitle('volatile acidity vs alcohol content of red wine based on quality')+
+  labs(x = 'Alcohol (% by volume)', y = 'volatile acidity (acetic acid - g/dm^3)')
 ```
 
 ### Description Three
