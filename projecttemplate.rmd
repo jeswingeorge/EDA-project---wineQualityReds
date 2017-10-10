@@ -22,6 +22,8 @@ library(tidyr)
 library(dplyr)
 library(GGally)
 library(gridExtra)
+library(corrplot)
+library(lattice)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
@@ -42,7 +44,7 @@ The dataset consists of 13 variables and 1599 observations.
 Structure of dataset
 
 ```{r echo=FALSE}
-wine_df$quality <- ordered(wine_df$quality, levels=c(1:10))
+#wine_df$quality <- ordered(wine_df$quality, levels=c(1:10))
 str(wine_df)
 ```
 
@@ -121,8 +123,8 @@ qualities of red wine.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(data = wine_df, aes(x=quality, y=fixed.acidity))+
-  geom_boxplot()+
-  coord_cartesian(ylim = c(6,10.5))+
+  geom_boxplot(aes(group=quality))+
+  coord_cartesian(ylim = c(6.5,10.5))+
   labs(title = 'Boxplot of fixed acidity vs Quality of red wine')
 ```
 
@@ -186,7 +188,7 @@ qualities of red wine.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(data = wine_df, aes(x=quality, y = volatile.acidity))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   coord_cartesian(ylim = c(0.25,1.05))+
   labs(title = 'Boxplot of volatile acidity vs Quality of red wine')
 ```
@@ -242,7 +244,7 @@ qualities of red wine.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(data = wine_df, aes(x=quality, y = citric.acid))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   coord_cartesian(ylim = c(0,0.55))+
   labs(title = 'Boxplot of citric acid vs Quality of red wine')
 ```
@@ -263,20 +265,32 @@ __Description of residual sugar:__ the amount of sugar remaining after
 fermentation stops, it is rare to find wines with less than 1 gram/liter and 
 wines with greater than 45 grams/liter are considered sweet.
 
-```{r echo=FALSE, fig.width=10}
-ggplot(wine_df, aes(x=residual.sugar))+
+```{r echo=FALSE, fig.width=10,message=FALSE, warning=FALSE}
+p <- ggplot(wine_df, aes(x=residual.sugar))+
   geom_histogram(binwidth = 0.5,color='black',fill='white')+
   scale_x_continuous(limits = c(0.5,16), breaks = seq(0.5,16,1))+
   labs(title = 'Histogram of residual sugar content in the available red wines')
+  
+p
 ```
 
 The distribution obtained above is right-skewed distribution. And most of the 
-available red wines have residual sugar in the range of 1.5 to 2.5 grams/liter.
+available red wines have residual sugar in the range of 1.5 to 2.5 grams/liter. 
+Applying log scale to the residual sugar histogram.
 
-```{r echo=FALSE, fig.width=10}
+```{r echo=FALSE, fig.width=10,message=FALSE, warning=FALSE}
+  ggplot(wine_df, aes(x=residual.sugar))+
+  geom_histogram(binwidth = 0.1,color='black',fill='white')+
+  labs(title = 'Histogram of residual sugar content using log_scale')+
+  scale_x_log10(limits = c(0.8,16), breaks = seq(0.8,16,0.5))
+```
+
+
+
+```{r echo=FALSE, fig.width=10,message=FALSE, warning=FALSE}
 ggplot(wine_df, aes(x=residual.sugar))+
-  geom_histogram(binwidth = 0.5,color='black',fill='white')+
-  scale_x_continuous(limits = c(0.5,16), breaks = seq(0.5,16,1))+
+  geom_histogram(binwidth = 0.1,color='black',fill='white')+
+  scale_x_log10(limits = c(0.8,16), breaks = seq(0.8,16,0.5))+
   facet_wrap( ~ quality,ncol=2, scales = 'free_y')+
   labs(title = 'Faceting the distribution of residual sugar content based on wine quality in the available red wines')
 ```
@@ -295,8 +309,8 @@ qualities of red wine.
 
 ```{r echo=FALSE, fig.width=10}
 ggplot(wine_df, aes(x = quality, y = residual.sugar))+
-  geom_boxplot()+
-  coord_cartesian(ylim = c(1.5,3.5))+
+  geom_boxplot(aes(group=quality))+
+  coord_cartesian(ylim = c(1.5,3.3))+
   labs(title = 'Boxplot of amount of residual sugar level vs Quality of red wines')
 ```
 
@@ -341,7 +355,7 @@ by(wine_df$chlorides, wine_df$quality, summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=chlorides))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   coord_cartesian(ylim = c(0.05,0.14))+
   labs(title='Boxplot of amount of chlorides vs the quality of red wine')
 ```
@@ -390,7 +404,7 @@ by(wine_df$free.sulfur.dioxide, wine_df$quality, summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=free.sulfur.dioxide))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   coord_cartesian(ylim = c(0,25))+
   labs(title='Boxplot of amount of free.sulfur.dioxide vs the quality of red wine')
 ```
@@ -436,7 +450,7 @@ by(wine_df$total.sulfur.dioxide, wine_df$quality,summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=total.sulfur.dioxide))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   labs(title='Boxplot of amount of total.sulfur.dioxide vs the quality of red wine')+
   coord_cartesian(ylim = c(5,90))
 ```
@@ -487,7 +501,7 @@ by(wine_df$density, wine_df$quality, summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality, y=density))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   labs(title='Boxplot of density vs quality of red wine')+
   coord_cartesian(ylim = c(0.994,0.999))
 ```
@@ -535,7 +549,7 @@ by(wine_df$pH, wine_df$quality,summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=pH))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   labs(title = 'Boxplot of pH vs Quality for red wine')+
   coord_cartesian(ylim = c(3.15,3.55))
 ```
@@ -584,7 +598,7 @@ by(wine_df$sulphates, wine_df$quality,summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=sulphates))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   labs(title='Boxplot of amount of sulphates vs Quality for red wine')+
   coord_cartesian(ylim = c(0.48,0.84))
 ```
@@ -631,7 +645,7 @@ by(wine_df$alcohol, wine_df$quality, summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality,y=alcohol))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   labs(title='Boxplot of alcohol content vs quality of red wine')+
   coord_cartesian(ylim = c(9.2,13))
 ```
@@ -682,7 +696,7 @@ by(wine_df$Total_acidity, wine_df$quality,summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality, y=Total_acidity))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   labs(title='Boxplot of total acidity vs quality of red wine')+
   coord_cartesian(ylim = c(7.5,11))
 ```
@@ -731,7 +745,7 @@ by(wine_df$prop_free_so2, wine_df$quality,summary)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(wine_df, aes(x=quality, y=prop_free_so2))+
-  geom_boxplot()+
+  geom_boxplot(aes(group=quality))+
   coord_cartesian(ylim = c(0.2,0.6))+
   labs(title='Boxplot of free sulfur dioxide to the quality of red wine')
 ```
@@ -744,11 +758,7 @@ proportion of free SO^2^ with respect to total sulfur dioxide.
 ### What is the structure of your dataset?
 
 The above dataset consists of 1599 observations and 15 variables.    
-I converted one of the variables _quality_ to ordered factors which helps in
-making comparison between different qualities of wine. Also i added 2 variables
-to the dataset namely Total_acidity and prop_free_SO2.
-
-_Quality of wine :_ 1 < 2 < 3 < 4 <5 < 6 <7 <8 < 9 < 10
+Also i added 2 variables to the dataset namely Total_acidity and prop_free_SO2.
 
 ### What is/are the main feature(s) of interest in your dataset?
 
@@ -776,12 +786,13 @@ wine.
 ### Did you create any new variables from existing variables in the dataset?
 
 Yes, i created 2 new variables from the existing variables.
-- __Total_acidity :__ As there are three types of acidity in the 
+
+* __Total_acidity :__ As there are three types of acidity in the 
 red wine so i was just curious to find out the net effect of all acidity on the 
 quality of red wine. So i created this variable which is the sum of fixed  
 acidity, volatile acidity and citirc acid. (measured in g/dm^3^)
 
-- __prop_free_so2 :__ It is the ratio of free.sulfur.dioxide to 
+* __prop_free_so2 :__ It is the ratio of free.sulfur.dioxide to 
 total.sulfur.dioxide present in the concerned red wine. As the 
 total.sulfur.dioxide present in the red wine contains both free.sulfur.dioxide 
 and bound.sulfur.dioxide so to determine the proportion in which the 
@@ -792,25 +803,80 @@ red wine we use this variable.
 Did you perform any operations on the data to tidy, adjust, or change the form \
 of the data? If so, why did you do this?
 
-Yes, i changes the quality variable from numeric type to ordered factor type to 
-treat quality as a categorical variable. Morover it is given that in the given 
-dataset there are no missing values i.e., NA.
+I tried to change the scale of  x-axis from continuous to logarithmic but there 
+was not much variation to the plot. No other transformation to the dataset and
+plot was required as 
 
-```
-echo=FALSE, message=FALSE, warning=FALSE,fig.width=10
-```
 
 # Bivariate Plots Section
 
-> **Tip**: Based on what you saw in the univariate plots, what relationships
-between variables might be interesting to look at in this section? Don't limit
-yourself to relationships between a main output feature and one of the
-supporting variables. Try to look at relationships between supporting variables
-as well.
+In the bivariate analysis, i will start by finding the correlation coefficent 
+between quality and other variables and among the other supporting variables. 
 
-```{r echo=FALSE, Bivariate_Plots}
+__Correlation matrix__
 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=8, fig.height=7}
+cwine_df <- wine_df %>%
+  select(c(2:15))
+
+mcor <- cor(cwine_df)
+round(mcor,digits = 3)  
 ```
+
+__Plotting the Correlation matrix__
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+corrplot(mcor)
+```
+
+From the correlation matrix plot it can be observed that :
+
+* Fixed acidity is highly correlated citric acid, density and Total 
+acidity.  Fixed acidity has high value of negative correlation with pH. And 
+correlation of fixed acidity with quality is very low. 
+* Volatile acidity is negatively correlated with citric acid and quality.
+* Citric acid has high positive correlation with fixed acidity and total acidity.
+* Density has highly positively correlated with fixed acidity and total acidity.
+* pH has negative correlation with density, fixed, citric and total acidity.
+* Alcohol has negative correlation with density and positive correlation with 
+alcohol.  
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=pH, y=fixed.acidity))+
+  geom_point(color='grey60')+
+  stat_smooth(color='red',method='lm')+
+  labs(title='Scatterplot of Fixed-acidity vs pH of red wine')
+```
+
+The above graph shows the negative correlation between fixed acidity and pH 
+value of red wine. Also a linear regression line is added to a scatterplot.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
+ggplot(wine_df, aes(x=pH, y=density))+
+  geom_point(color='grey60')+
+  stat_smooth(color='red')+
+  labs(title='Scatterplot of density vs pH of red wine')
+```
+
+The above graph shows the scatterplot between density and pH of red wine it 
+shows the negative relation between density and pH. Also the regression line 
+used here is a loess curve.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Bivariate Analysis
 
@@ -828,6 +894,25 @@ the dataset?
 
 
 # Multivariate Plots Section
+
+
+__Scatterplot matrix__
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10, fig.height=10}
+splom(cwine_df[c(1,2,7,8,9,11,12)], data = cwine_df, groups = NULL,  axis.line.tck=0,axis.text.alpha = 0)
+```
+
+The above scatter plot matrix has been made by selecting the variables from the
+correlation matrix plot. This graph helps in getting the idea of scatterplot 
+that we will get when plotting different variables in the datset,
+
+
+
+
+
+
+
+
 
 > **Tip**: Now it's time to put everything together. Based on what you found in
 the bivariate plots section, create a few multivariate plots to investigate
