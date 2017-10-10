@@ -77,7 +77,8 @@ ggplot(data = wine_df, aes(x=quality)) +
 ```
 
 So from the above two analysis: it is observed that wines with quality ratings 5 
-and 6 is the most available in the given dataset. 
+and 6 is the most available in the given dataset. Followed by quality 7 and 
+quality 4. Quality 8 followed by quality 3 are the least available.
 
 ***
 
@@ -837,7 +838,7 @@ correlation of fixed acidity with quality is very low.
 * Citric acid has high positive correlation with fixed acidity and total acidity.
 * Density has highly positively correlated with fixed acidity and total acidity.
 * pH has negative correlation with density, fixed, citric and total acidity.
-* Alcohol has negative correlation with density and positive correlation with 
+* Quality has negative correlation with density and positive correlation with 
 alcohol.  
 
 __Scatterplot matrix__
@@ -967,28 +968,23 @@ ggplot(data = wine_df,aes(y=density, x=alcohol,color=quality))+
   labs(x = 'Alcohol (% by volume)',y='density (g/cm^3)')
 ```
 
-Analyzing the 
-
-
-
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
-ggplot(data = wine_df,aes(y=pH, x=alcohol,color=quality))+
-  geom_point(size=5)+
-  scale_color_brewer(type='seq', guide = guide_legend(title = 'Quality'))+
-  ggtitle('pH and alcohol of red wine based on Quality')+
-  labs(x = 'Alcohol (% by volume)')
-```
-
-From the 
+Analyzing the above plot it can be seen that as the quality of red wine improves
+it's density decreases and alcohol content also increases as the points seem to 
+move towards the bottom right corner of the graph. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
 ggplot(data = wine_df,aes(x=pH, y=fixed.acidity,color=quality))+
   geom_point(size=5)+
-  scale_color_brewer(type='seq', guide = guide_legend(title = 'Quality'))+
+  scale_color_brewer(type='div', guide = guide_legend(title = 'Quality'))+
   ggtitle('pH and fixed acidity of red wine based on Quality')+
   labs(y='fixed acidity (tartaric acid - g/dm^3)')
 ```
 
+it is observed that pH value of wine lies between 3 and 4 . Also for a good 
+quality of red wine pH value must be less than 3.5. As it is observed from the 
+above graph majority of the red wines have pH below 3.5 and as pH decreases 
+fixed acidity content also improves.  
+[Blog on pH of wines](http://winemakersacademy.com/importance-ph-wine-making/)
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
@@ -999,9 +995,11 @@ ggplot(wine_df, aes(x=alcohol,y=volatile.acidity,color=quality))+
   labs(x = 'Alcohol (% by volume)', y = 'volatile acidity (acetic acid - g/dm^3)')
 ```
 
-
-
-
+Alcohol content and volatile acidity of wine are the two important factors that 
+affect the quality of red wine as from all the analysis done above. It is seen 
+that as volatile acidity decreases and alcohol content improves the quality of 
+wine improves gradually. So referring to the graph, good quality wines tend to 
+move towards the bottom right corner of the graph.
 
 # Multivariate Analysis
 
@@ -1009,22 +1007,22 @@ ggplot(wine_df, aes(x=alcohol,y=volatile.acidity,color=quality))+
 investigation. Were there features that strengthened each other in terms of \
 looking at your feature(s) of interest?
 
+The relation between fixed acidity and pH by quality strengthens each other. As 
+its known that low pH value implies high acidity so from the graph it is seen 
+that at low pH values fixed acidity value is high. ANd the quality of wine also 
+improves  as the above relationship in the wine is satisfied.
+
 ### Were there any interesting or surprising interactions between features?
 
-### OPTIONAL: Did you create any models with your dataset? Discuss the \
-strengths and limitations of your model.
+One surprising feature is the relationship between density and alcohol content 
+by quality. It can be seen that as the alcohol content  decreases the density of
+the red wine has increased and the quality decreases that is the good quality 
+wines points tend to move towards the right bottom corner of the graph with low 
+density and high alcohol content.
 
 ------
 
 # Final Plots and Summary
-
-> **Tip**: You've done a lot of exploration and have built up an understanding
-of the structure of and relationships between the variables in your dataset.
-Here, you will select three plots from all of your previous exploration to
-present here as a summary of some of your most interesting findings. Make sure
-that you have refined your selected plots for good titling, axis labels (with
-units), and good aesthetic choices (e.g. color, transparency). After each plot,
-make sure you justify why you chose each plot by describing what it shows.
 
 ### Plot One
 ```{r echo=FALSE,fig.width=10}
@@ -1035,6 +1033,14 @@ ggplot(data = wine_df, aes(x=quality)) +
 
 ### Description One
 
+So from the above two analysis: it is observed that wines with quality ratings 5 
+and 6 is the most available in the given dataset. Followed by quality 7 and 
+quality 4. Quality 8 followed by quality 3 are the least available.
+
+```{r echo=FALSE}
+table(wine_df$quality)
+```
+
 
 ### Plot Two
 __Plotting the Correlation matrix__
@@ -1044,6 +1050,17 @@ corrplot(mcor)
 
 ### Description Two
 
+From the correlation matrix plot it can be observed that :
+
+* Fixed acidity is highly correlated citric acid, density and Total 
+acidity.  Fixed acidity has high value of negative correlation with pH. And 
+correlation of fixed acidity with quality is very low. 
+* Volatile acidity is negatively correlated with citric acid and quality.
+* Citric acid has high positive correlation with fixed acidity and total acidity.
+* Density has highly positively correlated with fixed acidity and total acidity.
+* pH has negative correlation with density, fixed, citric and total acidity.
+* Alcohol has negative correlation with density and positive correlation with 
+alcohol. 
 
 ### Plot Three
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10}
@@ -1056,14 +1073,39 @@ ggplot(wine_df, aes(x=alcohol,y=volatile.acidity,color=quality))+
 
 ### Description Three
 
+Alcohol content and volatile acidity of wine are the two important factors that 
+affect the quality of red wine as from all the analysis done above. It is seen 
+that as volatile acidity decreases and alcohol content improves the quality of 
+wine improves gradually. So referring to the graph, good quality wines tend to 
+move towards the bottom right corner of the graph.
+
 ------
 
 # Reflection
 
-> **Tip**: Here's the final step! Reflect on the exploration you performed and
-the insights you found. What were some of the struggles that you went through?
-What went well? What was surprising? Make sure you include an insight into
-future work that could be done with the dataset.
+The conclusions drawn by me in this analysis are:
 
-> **Tip**: Don't forget to remove this, and the other **Tip** sections before
-saving your final work and knitting the final report!
+1. In the given dataset for red wine, Quality 5 and quality 6 wines are the 
+most available.
+2. Red wines of Quality 1, Quality 2, Quality 9 and Quality 10 are not 
+available.
+3. Amount of residual sugar levels (in g/dm^3^) in red wines have no affect on
+quality of red wine,
+4. As pH decreases fixed acidity amount improves.
+5. Density of red wine decreases montonically as pH value increases.
+6. Density of red wine decreases with increase in alcohol content.
+7. Quality of red wine improves as alcohol content increases.
+8. Quality of red wine improves as volatile acid's content decreases.
+
+The analysis could have been performed better if there was more data on other 
+qualities of red wines available. If more data had been availabe results could 
+have been more accurate and new conclusions and inferences could have been made. 
+
+It was surprising to see that some chemical parameters such as residual sugar, 
+chlorides, free sulfur dioxide and total sulfur dioxide did not have much affect
+on the quality of red wine.
+
+For future explorations i can combine the red wine dataset with the dataset for 
+white wine to draw comparisons between them and analyze the differences in their
+chemical constituents or parameters. Also the data for other qualities of red 
+wine would greatly help in improving this analysis. 
