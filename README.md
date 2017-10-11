@@ -63,3 +63,11 @@ The given dataset contains 1,599 red wines with 11 variables on the chemical pro
 
    Output variable (based on sensory data): 
    12 - quality (score between 0 and 10)
+
+## References
+
+1. Udacity forum
+2. [IMPORTANCE OF PH IN WINE MAKING](http://winemakersacademy.com/importance-ph-wine-making/)
+3. [Linear regression algorithm | Edureka](https://www.youtube.com/watch?v=1-URCcgTBf4)
+4. [ggplot2 graphs reference](http://ggplot2.tidyverse.org/reference/)
+5. __R Graphics Codebook__ by Winston Chang
